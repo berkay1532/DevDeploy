@@ -43,7 +43,7 @@ export function useGitHubAuth() {
     setError(null)
     
     try {
-      const clientId = process.env.NEXT_PUBLIC_GITHUB_CLIENT_ID
+      const clientId = process.env.NEXT_PUBLIC_GITHUB_CLIENT_ID || "Ov23li1JyJyNWvMjlBWT"
       const redirectUri = window.location.origin + '/auth/callback'
       
       // Generate random state for security
@@ -76,7 +76,7 @@ export function useGitHubAuth() {
 
   const exchangeCodeForToken = async (code: string): Promise<{ access_token: string; user: GitHubUser }> => {
     // Backend endpoint URL - bunu kendi backend URL'inizle değiştirin
-    const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:3001'
+    const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:3030'
     
     const response = await fetch(`${backendUrl}/auth/github`, {
       method: 'POST',

@@ -22,13 +22,31 @@ interface Repository {
 }
 
 export default function HomePage() {
-  const { user, loading, error, signIn, signOut, fetchRepositories } = useGitHubAuth()
+  const { user, loading, error, signIn, signOut, fetchRepositories, exchangeCodeForToken } = useGitHubAuth()
   const [selectedOption, setSelectedOption] = useState<"walrus" | "oasis" | null>(null)
   const [selectedRepo, setSelectedRepo] = useState<Repository | null>(null)
   const [repositories, setRepositories] = useState<Repository[]>([])
   const [reposLoading, setReposLoading] = useState(false)
   const [deploying, setDeploying] = useState(false)
   const [reposError, setReposError] = useState<string | null>(null)
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search)
+    const code = params.get('code')
+    const state = params.get('state')
+
+    if (code) {
+      exchangeCodeForToken(code)
+        .then(({ access_token, user }) => {
+          localStorage.setItem('github_access_token', access_token)
+          localStorage.setItem('github_user', JSON.stringify(user))
+          window.location.href = '/' // Sayfayı temizle
+        })
+        .catch((err) => {
+          console.error('GitHub login failed:', err.message)
+        })
+    }
+  }, [])
 
   useEffect(() => {
     if (user && selectedOption) {

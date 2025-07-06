@@ -44,7 +44,8 @@ export function useGitHubAuth() {
     
     try {
       const clientId = process.env.NEXT_PUBLIC_GITHUB_CLIENT_ID || "Ov23li1JyJyNWvMjlBWT"
-      const redirectUri = window.location.origin + '/auth/callback'
+     // const redirectUri = window.location.origin // + '/auth/callback'
+      const redirectUri = "http://3.236.219.254:3030"  + '/auth/callback'
       
       // Generate random state for security
       const state = Math.random().toString(36).substring(7)
@@ -76,7 +77,7 @@ export function useGitHubAuth() {
 
   const exchangeCodeForToken = async (code: string): Promise<{ access_token: string; user: GitHubUser }> => {
     // Backend endpoint URL - bunu kendi backend URL'inizle değiştirin
-    const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://131.153.154.9:10116'
+    const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://3.236.219.254:3030'
     
     // DEBUG: Backend URL'ini console'da göster
     console.log('🔍 Backend URL:', backendUrl)

@@ -76,7 +76,12 @@ export function useGitHubAuth() {
 
   const exchangeCodeForToken = async (code: string): Promise<{ access_token: string; user: GitHubUser }> => {
     // Backend endpoint URL - bunu kendi backend URL'inizle değiştirin
-    const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:3030'
+    const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://131.153.154.9:10116'
+    
+    // DEBUG: Backend URL'ini console'da göster
+    console.log('🔍 Backend URL:', backendUrl)
+    console.log('🔍 Full URL:', `${backendUrl}/auth/github`)
+    console.log('🔍 Code:', code)
     
     const response = await fetch(`${backendUrl}/auth/github`, {
       method: 'POST',
@@ -86,12 +91,17 @@ export function useGitHubAuth() {
       body: JSON.stringify({ code }),
     })
 
+    console.log('🔍 Response Status:', response.status)
+    console.log('🔍 Response OK:', response.ok)
+
     if (!response.ok) {
       const errorData = await response.json().catch(() => ({}))
+      console.error('🔍 Backend Error:', errorData)
       throw new Error(errorData.error || 'Failed to exchange code for token')
     }
 
     const data = await response.json()
+    console.log('🔍 Backend Response:', data)
 
     // Backend sadece access_token döndürüyor, user bilgisini ayrıca alalım
     const userResponse = await fetch('https://api.github.com/user', {
